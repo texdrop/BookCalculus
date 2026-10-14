@@ -1,0 +1,1084 @@
+% ============================================================
+%  CALCULUS – Typographic Design
+%  Compile with: pdflatex -shell-escape calculus.tex (2x)
+% ============================================================
+\documentclass[a4paper,10pt,twoside]{book}
+
+%% ─── Packages ───────────────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{fix-cm}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=2.2cm,bottom=2.5cm,inner=2.4cm,outer=1.8cm,
+            marginparwidth=0cm,includeheadfoot,headheight=21pt]{geometry}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning,shapes.geometric,decorations.pathmorphing}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable,raster,hooks}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{wrapfig}
+\usepackage{adjustbox}
+\usepackage{pifont}
+\usepackage{marvosym}
+\usepackage{tasks}
+\usepackage{qrcode}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{varwidth}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+%% ─── Color Palette ──────────────────────────────────────────
+\definecolor{Cap1Blue}{HTML}{1E9ED7}   % turquoise blue
+\definecolor{Cap2Orange}{HTML}{F07E26} % orange
+\definecolor{Cap3Green}{HTML}{5BB85D}  % green
+\definecolor{Cap4Purple}{HTML}{7C5CBF} % purple
+\definecolor{AccentYellow}{HTML}{FFD93D}
+\definecolor{AccentRed}{HTML}{E84855}
+\definecolor{LightBlue}{HTML}{DAEEF8}
+\definecolor{LightOrange}{HTML}{FDEBD0}
+\definecolor{LightGreen}{HTML}{D5F5D5}
+\definecolor{LightPurple}{HTML}{EAE4F7}
+\definecolor{LightYellow}{HTML}{FFFBCC}
+\definecolor{DarkText}{HTML}{1A1A2E}
+\definecolor{MidGray}{HTML}{6C757D}
+\definecolor{BoxGray}{HTML}{F4F6F8}
+\definecolor{RuleGray}{HTML}{DEE2E6}
+
+%% ─── Chapter Color (redefined per chapter) ──────────────────
+\newcommand{\ChapColor}{Cap1Blue}
+\newcommand{\ChapColorLight}{LightBlue}
+\newcommand{\setChapColor}[2]{\renewcommand{\ChapColor}{#1}%
+                               \renewcommand{\ChapColorLight}{#2}}
+
+%% ─── Header / Footer ────────────────────────────────────────
+\fancypagestyle{main}{%
+  \fancyhf{}
+  \fancyhead[LE]{%
+    \begin{tikzpicture}[baseline=-0.5ex]
+      \fill[\ChapColor] (0,0) rectangle (0.5cm,0.45cm);
+      \node[anchor=west,text=white,font=\bfseries\small] at (0.55cm,0.22cm)
+        {\nouppercase{\leftmark}};
+    \end{tikzpicture}}
+  \fancyhead[RO]{%
+    \begin{tikzpicture}[baseline=-0.5ex]
+      \node[anchor=east,text=MidGray,font=\small] at (-0.55cm,0.22cm)
+        {\nouppercase{\rightmark}};
+      \fill[\ChapColor] (0,0) rectangle (-0.5cm,0.45cm);
+    \end{tikzpicture}}
+  \fancyfoot[LE]{%
+    \begin{tikzpicture}[baseline=-0.5ex]
+      \fill[\ChapColor,rounded corners=10pt] (0,0) rectangle (0.65cm,0.5cm);
+      \node[text=white,font=\bfseries\small] at (0.325cm,0.25cm) {\thepage};
+    \end{tikzpicture}}
+  \fancyfoot[RO]{%
+    \begin{tikzpicture}[baseline=-0.5ex]
+      \fill[\ChapColor,rounded corners=10pt] (0,0) rectangle (0.65cm,0.5cm);
+      \node[text=white,font=\bfseries\small] at (0.325cm,0.25cm) {\thepage};
+    \end{tikzpicture}}
+  \fancyfoot[C]{\color{MidGray}\tiny Calculus}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}}
+\pagestyle{main}
+
+%% ─── Chapter Style ──────────────────────────────────────────
+\titleformat{\chapter}[block]{}{}
+  {0pt}{\chaptertitleformat}
+\newcommand{\chaptertitleformat}[1]{%
+  \begin{tikzpicture}[remember picture,overlay]
+    %% lateral stripe
+    \fill[\ChapColor] (-1cm,0.2cm) rectangle (0.1cm,-5.5cm);
+    %% large circle with number
+    \fill[\ChapColor] (1.2cm,-1.8cm) circle (1.5cm);
+    \fill[white,opacity=0.15] (1.2cm,-1.8cm) circle (1.2cm);
+    \node[text=white,font=\fontsize{52}{52}\selectfont\bfseries] at (1.2cm,-1.8cm)
+      {\thechapter};
+    %% title in uppercase
+    \node[anchor=north west,text=\ChapColor,font=\fontsize{28}{32}\selectfont\bfseries,
+          align=left,text width=10cm] at (3.2cm,-0.3cm) {#1};
+    %% decorative wide stripe
+    \fill[\ChapColor,opacity=0.12] (-1cm,-4.5cm) rectangle (\textwidth,-5.5cm);
+  \end{tikzpicture}%
+  \vspace{5.8cm}}
+
+\titlespacing{\chapter}{0pt}{0pt}{0pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{\ChapColor}}
+  {\makebox[1.2cm][l]{\thesection}}{0pt}{}[{%
+    \color{\ChapColor}\rule[0.4ex]{\linewidth}{1.5pt}}]
+
+\titleformat{\subsection}[runin]{\bfseries\color{DarkText}}
+  {\thesubsection\;}{0pt}{}[~---]
+
+%% ─── tcolorbox Environments ─────────────────────────────────
+
+%% Definition
+\tcbset{definicaobase/.style={
+    enhanced,breakable,
+    colback=LightBlue,colframe=Cap1Blue,
+    colbacktitle=Cap1Blue,coltitle=white,
+    fonttitle=\bfseries\small,
+    arc=6pt,boxrule=1.2pt,
+    attach boxed title to top left={xshift=8pt,yshift=-3pt},
+    boxed title style={arc=4pt,boxrule=0pt},
+    left=6pt,right=6pt,top=10pt,bottom=6pt}}
+
+\newenvironment{definition}[1]{%
+  \begin{tcolorbox}[definicaobase,
+    colback=\ChapColorLight,colframe=\ChapColor,
+    colbacktitle=\ChapColor,
+    title={\ding{100}\ Definition\ifx&#1&\else\ ---\ #1\fi}]}
+  {\end{tcolorbox}}
+
+%% Theorem
+\tcbset{teoremabase/.style={
+    enhanced,breakable,
+    colback=LightYellow,colframe=AccentYellow,
+    colbacktitle=AccentYellow,coltitle=DarkText,
+    fonttitle=\bfseries\small,
+    arc=6pt,boxrule=1.2pt,
+    attach boxed title to top left={xshift=8pt,yshift=-3pt},
+    boxed title style={arc=4pt,boxrule=0pt},
+    left=6pt,right=6pt,top=10pt,bottom=6pt}}
+
+\newenvironment{theorem}[1]{%
+  \begin{tcolorbox}[teoremabase,title={\ding{72}\ Theorem\ifx&#1&\else\ ---\ #1\fi}]}
+  {\end{tcolorbox}}
+
+%% Example
+\newenvironment{example}[1]{%
+  \begin{tcolorbox}[enhanced,breakable,
+    colback=BoxGray,colframe=RuleGray,
+    colbacktitle=MidGray,coltitle=white,
+    fonttitle=\bfseries\small,
+    arc=6pt,boxrule=0.6pt,
+    attach boxed title to top left={xshift=8pt,yshift=-3pt},
+    boxed title style={arc=4pt,boxrule=0pt},
+    left=6pt,right=6pt,top=10pt,bottom=6pt,
+    title={\ding{228}\ Example\ifx&#1&\else\ #1\fi}]}
+  {\end{tcolorbox}}
+
+%% Caution / Warning
+\newenvironment{caution}[0]{%
+  \begin{tcolorbox}[enhanced,
+    colback=LightOrange,colframe=Cap2Orange,
+    colbacktitle=Cap2Orange,coltitle=white,
+    fonttitle=\bfseries\small,
+    arc=6pt,boxrule=1.2pt,
+    attach boxed title to top left={xshift=8pt,yshift=-3pt},
+    boxed title style={arc=4pt,boxrule=0pt},
+    left=6pt,right=6pt,top=10pt,bottom=6pt,
+    title={\ding{45}\ Caution!}]}
+  {\end{tcolorbox}}
+
+%% Numbered Exercise
+\newcounter{exerc}[chapter]
+\renewcommand{\theexerc}{\thechapter.\arabic{exerc}}
+
+\newenvironment{exercise}[1][]{%
+  \refstepcounter{exerc}%
+  \begin{tcolorbox}[enhanced,breakable,
+    colback=white,colframe=\ChapColor,
+    arc=6pt,boxrule=1pt,
+    left=6pt,right=6pt,top=6pt,bottom=6pt,
+    before upper={\textbf{\color{\ChapColor}\theexerc}\ifx&#1&\else\ ---\ \textit{#1}\fi\par\smallskip}]}
+  {\end{tcolorbox}}
+
+%% Did You Know / Further Reading
+\newenvironment{didyouknow}[0]{%
+  \begin{tcolorbox}[enhanced,
+    colback=LightGreen,colframe=Cap3Green,
+    colbacktitle=Cap3Green,coltitle=white,
+    fonttitle=\bfseries\small,
+    arc=10pt,boxrule=1.2pt,
+    attach boxed title to top left={xshift=8pt,yshift=-3pt},
+    boxed title style={arc=6pt,boxrule=0pt},
+    left=6pt,right=6pt,top=10pt,bottom=6pt,
+    title={\ding{108}\ Did You Know?}]}
+  {\end{tcolorbox}}
+
+%% Pro / Con Comparison Box
+\newcommand{\procon}[4]{%
+  \begin{tcolorbox}[enhanced,sidebyside,sidebyside align=top,
+    colback=white,colframe=RuleGray,arc=6pt,boxrule=0.6pt,
+    lefthand width=0.48\linewidth]
+    \textbf{\color{Cap3Green}\ding{52}\ #1}\\[4pt]#2
+    \tcblower
+    \textbf{\color{AccentRed}\ding{55}\ #3}\\[4pt]#4
+  \end{tcolorbox}}
+
+%% Highlighted Numerical Result
+\newcommand{\result}[1]{%
+  \begin{center}
+  \begin{tcolorbox}[enhanced,width=0.55\linewidth,
+    colback=\ChapColorLight,colframe=\ChapColor,
+    arc=8pt,boxrule=1.5pt,halign=center,
+    left=8pt,right=8pt,top=6pt,bottom=6pt]
+    \large\bfseries\color{\ChapColor}#1
+  \end{tcolorbox}
+  \end{center}}
+
+%% Numbered Step Block
+\newcommand{\step}[2]{%
+  \begin{tikzpicture}[baseline=(n.base)]
+    \fill[\ChapColor] (0,0) circle (0.25cm);
+    \node[text=white,font=\bfseries\small] (n) at (0,0) {#1};
+  \end{tikzpicture}\hspace{6pt}#2\par\smallskip}
+
+%% Highlighted Formula Box (orange)
+\newcommand{\formula}[2][]{%
+  \begin{tcolorbox}[enhanced,
+    colback=LightOrange,colframe=Cap2Orange,
+    arc=6pt,boxrule=1.5pt,halign=center,
+    left=8pt,right=8pt,top=4pt,bottom=4pt]
+    \ifx&#1&\else\textbf{\small\color{Cap2Orange}#1}\\[4pt]\fi
+    \( \displaystyle #2 \)
+  \end{tcolorbox}}
+
+%% QR Code with Caption
+\newcommand{\qrbox}[2]{%
+  \begin{tcolorbox}[enhanced,width=3.8cm,
+    colback=white,colframe=\ChapColor,
+    arc=6pt,boxrule=1pt,halign=center,
+    left=4pt,right=4pt,top=4pt,bottom=4pt]
+    \qrcode[height=2.5cm]{#1}\\[4pt]
+    {\tiny\color{MidGray}#2}
+  \end{tcolorbox}}
+
+%% Lesson Box
+\newcounter{lesson}[chapter]
+\renewcommand{\thelesson}{Lesson\ \thechapter.\arabic{lesson}}
+\newenvironment{lesson}[1]{%
+  \refstepcounter{lesson}%
+  \begin{tcolorbox}[enhanced,breakable,
+    colback=white,colframe=\ChapColor,
+    colbacktitle=\ChapColor,coltitle=white,
+    fonttitle=\bfseries\small,
+    arc=8pt,boxrule=1.5pt,
+    attach boxed title to top left={xshift=10pt,yshift=-4pt},
+    boxed title style={arc=5pt,boxrule=0pt},
+    left=6pt,right=6pt,top=12pt,bottom=6pt,
+    title={\thelesson\ ---\ #1}]}
+  {\end{tcolorbox}}
+
+%% Quick Answer Key
+\newenvironment{answerkey}{%
+  \smallskip
+  \begin{tcolorbox}[enhanced,
+    colback=\ChapColorLight,colframe=\ChapColor,
+    arc=6pt,boxrule=0.8pt,
+    title={\small\bfseries\color{white} Quick Answer Key},
+    colbacktitle=\ChapColor,fonttitle=\small,
+    left=4pt,right=4pt,top=6pt,bottom=4pt,
+    attach boxed title to top left={xshift=8pt,yshift=-3pt},
+    boxed title style={arc=4pt}]
+  \footnotesize\begin{multicols}{3}}
+  {\end{multicols}\end{tcolorbox}}
+
+%% ─── Styled TOC ─────────────────────────────────────────────
+\titlecontents{chapter}[0pt]
+  {\vspace{6pt}\bfseries}
+  {\begin{tikzpicture}[baseline=-0.5ex,inner sep=0pt]
+     \fill[Cap1Blue] (0,0) circle (0.22cm);
+     \node[text=white,font=\tiny\bfseries] at (0,0) {\thecontentslabel};
+   \end{tikzpicture}\hspace{6pt}}
+  {}{\titlerule*[6pt]{.}\contentspage}
+
+\titlecontents{section}[1.4cm]
+  {}
+  {\contentslabel{1.2cm}}
+  {}{\titlerule*[6pt]{.}\contentspage}
+
+%% ─── Decorative Section Divider ─────────────────────────────
+\newcommand{\secbar}{%
+  \begin{tikzpicture}
+    \fill[\ChapColor] (0,0) rectangle (\linewidth,0.08cm);
+    \fill[AccentYellow] (0,0) rectangle (2cm,0.08cm);
+  \end{tikzpicture}\par\smallskip}
+
+%% ─── Topic Icon ─────────────────────────────────────────────
+\newcommand{\topic}[2]{%
+  \begin{tikzpicture}[baseline=-0.5ex]
+    \fill[\ChapColor,rounded corners=3pt] (0,0) rectangle (0.35cm,0.35cm);
+    \node[text=white,font=\bfseries\tiny] at (0.175cm,0.175cm) {#1};
+  \end{tikzpicture}\hspace{4pt}\textbf{#2}}
+
+%% ─── Styled Lists ───────────────────────────────────────────
+\setlist[itemize,1]{label=\textcolor{\ChapColor}{\ding{228}},
+                    leftmargin=1.2em,itemsep=2pt}
+\setlist[enumerate,1]{label=\textcolor{\ChapColor}{\bfseries\arabic*.},
+                      leftmargin=1.5em,itemsep=2pt}
+
+%% ─── End of Preamble ────────────────────────────────────────
+\begin{document}
+
+%%=============================================================
+%%  COVER PAGE
+%%=============================================================
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+  %% Background
+  \fill[Cap1Blue] (current page.north west) rectangle (current page.south east);
+  %% Decorative shapes
+  \fill[Cap1Blue!70!black] (current page.north east) +(-3cm,-6cm)
+    [rounded corners=2cm] rectangle +(0,0);
+  \fill[white,opacity=0.08] (current page.south west) +(4cm,5cm) circle (4.5cm);
+  \fill[white,opacity=0.06] (current page.north east) +(-5cm,-10cm) circle (6cm);
+  \fill[Cap2Orange] (current page.west) +(0,-2cm)
+    rectangle +(0.7cm,\paperheight);
+  \fill[AccentYellow] (current page.west) +(0.7cm,-2cm)
+    rectangle +(1.1cm,\paperheight);
+  %% Large decorative circle
+  \draw[white,opacity=0.15,line width=12pt]
+    (current page.center) +(3cm,2cm) circle (6cm);
+  \draw[white,opacity=0.08,line width=20pt]
+    (current page.center) +(3cm,2cm) circle (8cm);
+  %% Title
+  \node[anchor=north west,text=white,font=\fontsize{60}{64}\selectfont\bfseries,
+        align=left] at ($(current page.north west)+(2.0cm,-3.5cm)$)
+    {CALCULUS};
+  \node[anchor=north west,text=AccentYellow,
+        font=\fontsize{22}{26}\selectfont,align=left]
+    at ($(current page.north west)+(2.1cm,-6.4cm)$)
+    {A modern course with\\applications and visualizations};
+  %% Decorative line
+  \draw[white,line width=1.5pt]
+    ($(current page.north west)+(2.0cm,-5.8cm)$)
+    -- ($(current page.north west)+(14cm,-5.8cm)$);
+  %% Chapter summary icons
+  \foreach \n/\cor/\nome/\y in {
+    1/Cap1Blue/Limits and Continuity/-9.2cm,
+    2/Cap2Orange/Derivatives/-10.6cm,
+    3/Cap3Green/Applications of Derivatives/-12.0cm,
+    4/Cap4Purple/Indefinite Integrals/-13.4cm}{
+    \fill[\cor] ($(current page.north west)+(2.1cm,\y)$) circle (0.4cm);
+    \node[text=white,font=\bfseries] at ($(current page.north west)+(2.1cm,\y)$) {\n};
+    \node[anchor=west,text=white,font=\large]
+      at ($(current page.north west)+(2.75cm,\y)$) {\nome};
+  }
+  %% Decorative graph
+  \begin{scope}[shift={($(current page.south east)+(-5.5cm,4cm)$)}]
+    \begin{axis}[
+      width=7cm,height=6cm,
+      axis line style={white,opacity=0.4},
+      tick style={white,opacity=0.3},
+      ticklabel style={white,opacity=0.4,font=\tiny},
+      domain=-3.5:3.5,samples=80,
+      xmin=-3.8,xmax=3.8,ymin=-1.5,ymax=1.5,
+      grid=none]
+      \addplot[white,line width=1.5pt,opacity=0.7] {sin(deg(x))};
+      \addplot[AccentYellow,line width=1.5pt,opacity=0.7] {cos(deg(x))};
+      \addplot[Cap2Orange,line width=1.5pt,opacity=0.7,domain=-2:2] {x^2/4-1};
+    \end{axis}
+  \end{scope}
+  %% Footer
+  \node[anchor=south west,text=white,font=\small,opacity=0.7]
+    at ($(current page.south west)+(2.0cm,0.8cm)$) {Calculus for Science and Engineering\ \textbullet\ 1st edition};
+\end{tikzpicture}
+\end{titlepage}
+
+%%=============================================================
+%%  TABLE OF CONTENTS
+%%=============================================================
+\frontmatter
+\tableofcontents
+
+%%=============================================================
+%%  CHAPTER 1 — LIMITS AND CONTINUITY
+%%=============================================================
+\mainmatter
+\setChapColor{Cap1Blue}{LightBlue}
+\chapter{Limits and Continuity}
+\markboth{Ch.~1\ --\ Limits and Continuity}{}
+
+%%─── Chapter Opening ─────────────────────────────────────────
+\begin{multicols}{2}
+\textbf{In this chapter} you will study the fundamental concept of a \emph{limit},
+which underpins all of differential and integral analysis.
+The main topics are:
+
+\begin{itemize}
+  \item \topic{1}{Intuitive idea of a limit}
+  \item \topic{2}{Formal definition ($\varepsilon$-$\delta$)}
+  \item \topic{3}{One-sided limits}
+  \item \topic{4}{Limits at infinity}
+  \item \topic{5}{Continuity}
+\end{itemize}
+
+\columnbreak
+\begin{didyouknow}
+Why are limits important? The derivative, the integral, and the sum of a series
+are all defined through a \textbf{limit} process.
+Without this concept, Calculus would not exist!
+\end{didyouknow}
+\end{multicols}
+
+\secbar
+
+%%─── Lesson 1.1 ──────────────────────────────────────────────
+\begin{lesson}{Intuitive Idea of a Limit}
+
+The \textbf{limit} of a function $f(x)$ as $x$ approaches $a$
+describes the behavior of $f$ \emph{near} $a$, regardless
+of what happens \emph{at} $a$.
+
+\medskip
+\step{1}{Analyze the table of values below for $f(x)=\frac{x^2-1}{x-1}$:}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|>{\columncolor{LightBlue}}c|c||c|>{\columncolor{LightBlue}}c|}
+\hline
+\rowcolor{Cap1Blue}
+\color{white}\textbf{$x$} & \color{white}\textbf{$f(x)$} &
+\color{white}\textbf{$x$} & \color{white}\textbf{$f(x)$} \\
+\hline
+0.9   & 1.9   & 1.1   & 2.1   \\
+0.99  & 1.99  & 1.01  & 2.01  \\
+0.999 & 1.999 & 1.001 & 2.001 \\
+\hline
+\end{tabular}
+\end{center}
+
+\step{2}{Notice that the values approach \textbf{2} as $x\to 1$:}
+
+\formula[Limit Notation]{%
+  \lim_{x \to 1} \frac{x^2-1}{x-1} = 2}
+
+\end{lesson}
+
+%%─── Formal Section ──────────────────────────────────────────
+\section{Formal Definition of a Limit}
+\label{sec:lim-formal}
+
+\begin{definition}{Limit ($\varepsilon$-$\delta$ Definition)}
+Let $f$ be defined on a neighborhood of $a$ (except possibly at $a$).
+We say that
+\[
+  \lim_{x \to a} f(x) = L
+\]
+if, for every $\varepsilon > 0$, there exists $\delta > 0$ such that
+\[
+  0 < |x - a| < \delta \implies |f(x) - L| < \varepsilon.
+\]
+\end{definition}
+
+\begin{multicols}{2}
+\begin{example}{1.1}
+Prove that $\lim_{x\to 3}(2x-1)=5$.
+
+\smallskip\textbf{Solution:}\\
+Given $\varepsilon>0$, take $\delta = \varepsilon/2$.
+If $0<|x-3|<\delta$, then
+\[
+  |(2x-1)-5| = 2|x-3| < 2\delta = \varepsilon.
+\]
+\end{example}
+
+\columnbreak
+\begin{caution}
+The $\varepsilon$-$\delta$ definition requires the limit to exist
+on both sides of $a$. If the one-sided limits
+$\lim_{x\to a^-}f(x)$ and $\lim_{x\to a^+}f(x)$
+differ, the limit \textbf{does not exist}.
+\end{caution}
+\end{multicols}
+
+%%─── Inline graph with pgfplots ──────────────────────────────
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.72\linewidth, height=5.5cm,
+  xlabel={$x$}, ylabel={$f(x)$},
+  xlabel style={font=\small},
+  ylabel style={font=\small},
+  tick label style={font=\small},
+  axis lines=center,
+  xmin=-1.5, xmax=3.5,
+  ymin=-0.5, ymax=4,
+  samples=120,
+  grid=both,
+  grid style={RuleGray,line width=0.3pt},
+  legend style={at={(0.98,0.05)},anchor=south east,font=\small,
+                fill=white,draw=RuleGray}]
+  \addplot[Cap1Blue,line width=1.8pt,domain=-1.4:2.99] {x+1};
+  \addplot[Cap1Blue,line width=1.8pt,domain=3.01:3.4] {x+1};
+  \addplot[Cap2Orange,only marks,mark=*,mark size=2.5pt]
+    coordinates {(1,2)};
+  \addplot[white,only marks,mark=*,mark size=1.8pt,
+           mark options={draw=Cap1Blue,fill=white}]
+    coordinates {(3,4)};
+  \addplot[Cap1Blue,only marks,mark=*,mark size=2.5pt]
+    coordinates {(3,2)};
+  \legend{$f(x)=x+1$ (with removable discontinuity)}
+\end{axis}
+\end{tikzpicture}
+\par\smallskip\textit{
+Example of a function with a removable discontinuity at $x=3$.}
+\end{center}
+
+\secbar
+
+%%─── Limit Theorems ──────────────────────────────────────────
+\section{Properties of Limits}
+
+\begin{theorem}{Algebra of Limits}
+If $\lim_{x\to a}f(x)=L$ and $\lim_{x\to a}g(x)=M$, then:
+\begin{multicols}{2}
+\begin{enumerate}
+  \item $\lim_{x\to a}[f(x)+g(x)] = L+M$
+  \item $\lim_{x\to a}[f(x)\cdot g(x)] = L\cdot M$
+  \item $\lim_{x\to a}\dfrac{f(x)}{g(x)} = \dfrac{L}{M}$,\ \ $M\neq 0$
+  \item $\lim_{x\to a}[c\,f(x)] = cL$
+\end{enumerate}
+\end{multicols}
+\end{theorem}
+
+\begin{theorem}{Squeeze Theorem (Sandwich Theorem)}
+If $g(x)\le f(x)\le h(x)$ on a neighborhood of $a$, and
+$\lim_{x\to a}g(x)=\lim_{x\to a}h(x)=L$, then
+$\lim_{x\to a}f(x)=L$.
+\end{theorem}
+
+\begin{example}{1.2 — Fundamental Trigonometric Limit}
+Show that $\displaystyle\lim_{x\to 0}\frac{\sin x}{x}=1$.
+
+\smallskip
+\textbf{Idea:} Use the Squeeze Theorem with
+$\cos x \le \dfrac{\sin x}{x} \le 1$ for $0<|x|<\pi/2$.
+
+\result{$\displaystyle\lim_{x\to 0}\dfrac{\sin x}{x}=1$}
+\end{example}
+
+\secbar
+
+%%─── Continuity ──────────────────────────────────────────────
+\section{Continuity}
+
+\begin{definition}{Continuity at a Point}
+A function $f$ is \textbf{continuous at $a$} if:
+\begin{enumerate}
+  \item $f(a)$ is defined;
+  \item $\lim_{x\to a}f(x)$ exists;
+  \item $\lim_{x\to a}f(x) = f(a)$.
+\end{enumerate}
+\end{definition}
+
+\procon{Continuous Function}{%
+  Graph with no ``jumps''\\
+  Can compute $f(a)$ directly\\
+  Theorems like IVT apply%
+}{Discontinuous Function}{%
+  Graph with ``holes'', jumps or asymptotes\\
+  Limit may not exist\\
+  Requires careful analysis%
+}
+
+%%─── Exercises ───────────────────────────────────────────────
+\section*{Chapter 1 Exercises}
+\addcontentsline{toc}{section}{Exercises}
+
+\begin{exercise}[Direct computation]
+Evaluate the limits:
+\begin{tasks}(2)
+  \task $\displaystyle\lim_{x\to 2}(3x^2-x+1)$
+  \task $\displaystyle\lim_{x\to 0}\frac{\tan x}{x}$
+  \task $\displaystyle\lim_{x\to\infty}\frac{2x^2-1}{x^2+3}$
+  \task $\displaystyle\lim_{x\to 4}\frac{\sqrt{x}-2}{x-4}$
+\end{tasks}
+\end{exercise}
+
+\begin{exercise}[$\varepsilon$-$\delta$ Definition]
+Using the formal definition, prove that $\lim_{x\to 1}(4x-3)=1$.
+\end{exercise}
+
+\begin{exercise}[Continuity]
+Determine the values of $k$ for which
+\[
+  f(x)=\begin{cases} kx^2+2, & x\le 1 \\ 3x+k, & x>1 \end{cases}
+\]
+is continuous at $x=1$.
+\end{exercise}
+
+\begin{answerkey}
+  \textbf{1a)} $11$\par
+  \textbf{1b)} $1$\par
+  \textbf{1c)} $2$\par
+  \textbf{1d)} $\tfrac{1}{4}$\par
+  \textbf{2)} $\delta=\varepsilon/4$\par
+  \textbf{3)} $k=\tfrac{1}{2}$
+\end{answerkey}
+
+%%=============================================================
+%%  CHAPTER 2 — DERIVATIVES
+%%=============================================================
+\setChapColor{Cap2Orange}{LightOrange}
+\chapter{Derivatives}
+\markboth{Ch.~2\ --\ Derivatives}{}
+
+\begin{multicols}{2}
+The \textbf{derivative} measures the instantaneous rate of change of a function.
+Geometrically, it is the slope of the tangent line to the graph.
+
+\begin{itemize}
+  \item \topic{1}{Average vs. instantaneous rate of change}
+  \item \topic{2}{Definition via limits}
+  \item \topic{3}{Differentiation rules}
+  \item \topic{4}{Chain rule}
+  \item \topic{5}{Higher-order derivatives}
+\end{itemize}
+
+\columnbreak
+\begin{didyouknow}
+The derivative appears in Physics as \textbf{velocity} ($v=ds/dt$),
+in Economics as \textbf{marginal cost}, and in Biology as
+a population growth rate.
+\end{didyouknow}
+\end{multicols}
+
+\secbar
+
+\begin{lesson}{From Average Rate to Derivative}
+
+\step{1}{The \textbf{average rate of change} of $f$ on $[a,a+h]$ is:}
+\formula{%
+  \frac{\Delta f}{\Delta x} = \frac{f(a+h)-f(a)}{h}}
+
+\step{2}{Letting $h\to 0$, the average rate becomes the \textbf{derivative} at $a$:}
+\formula[Definition of the Derivative]{%
+  f'(a) = \lim_{h\to 0}\frac{f(a+h)-f(a)}{h}}
+
+\step{3}{The result is the \textbf{slope} of the tangent line at $(a,f(a))$.}
+
+\end{lesson}
+
+\section{Differentiation Rules}
+
+\begin{theorem}{Elementary Rules}
+\begin{multicols}{2}
+\begin{enumerate}
+  \item $\dfrac{d}{dx}[c]=0$
+  \item $\dfrac{d}{dx}[x^n]=nx^{n-1}$
+  \item $\dfrac{d}{dx}[cf]=c f'$
+  \item $\dfrac{d}{dx}[f+g]=f'+g'$
+  \item $\dfrac{d}{dx}[fg]=f'g+fg'$
+  \item $\dfrac{d}{dx}\!\left[\dfrac{f}{g}\right]=\dfrac{f'g-fg'}{g^2}$
+\end{enumerate}
+\end{multicols}
+\end{theorem}
+
+\begin{theorem}{Chain Rule}
+If $y=f(u)$ and $u=g(x)$, then
+\[
+  \frac{dy}{dx} = \frac{dy}{du}\cdot\frac{du}{dx}
+  \quad\Longleftrightarrow\quad
+  [f(g(x))]' = f'(g(x))\cdot g'(x).
+\]
+\end{theorem}
+
+\begin{multicols}{2}
+\begin{example}{2.1}
+Compute $\dfrac{d}{dx}\!\left[\sin(x^2)\right]$.
+
+\medskip
+$u=x^2$, $\frac{du}{dx}=2x$, $\frac{d}{du}[\sin u]=\cos u$
+
+\result{$2x\cos(x^2)$}
+\end{example}
+
+\columnbreak
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.95\linewidth, height=5.5cm,
+  axis lines=center,
+  xmin=-1.8, xmax=2.4,
+  ymin=-1.2, ymax=6,
+  samples=100,
+  grid=both,
+  grid style={RuleGray,line width=0.3pt},
+  tick label style={font=\tiny},
+  xlabel={$x$}, ylabel={$y$},
+  xlabel style={font=\small},
+  ylabel style={font=\small},
+  legend style={font=\tiny,fill=white,draw=RuleGray,
+                at={(0.98,0.98)},anchor=north east}]
+  \addplot[Cap2Orange,line width=1.8pt,domain=-1.5:2.2] {x^2};
+  \addplot[Cap1Blue,dashed,line width=1.2pt,domain=0.5:2.0] {2*(x-1)+1};
+  \addplot[Cap2Orange,only marks,mark=*,mark size=2.5pt]
+    coordinates {(1,1)};
+  \legend{$f(x)=x^2$, tangent at $(1{,}1)$}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\end{multicols}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|>{\bfseries\color{Cap2Orange}}c|c|c|}
+\hline
+\rowcolor{Cap2Orange}
+\color{white}\textbf{Function} & \color{white}\textbf{Derivative} &
+\color{white}\textbf{Note}\\
+\hline
+$\sin x$    & $\cos x$               & trigonometric functions\\
+$\cos x$    & $-\sin x$              & \\
+$e^x$       & $e^x$                  & unique function $f=f'$\\
+$\ln x$     & $1/x$                  & $x>0$\\
+$x^n$       & $nx^{n-1}$             & power rule\\
+$\arctan x$ & $\dfrac{1}{1+x^2}$    & inverse trig.\\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{Chapter 2 Exercises}
+\addcontentsline{toc}{section}{Exercises}
+
+\begin{exercise}[Basic rules]
+Differentiate each function:
+\begin{tasks}(2)
+  \task $f(x)=3x^4-5x^2+7$
+  \task $g(x)=\sqrt{x}\cdot e^x$
+  \task $h(x)=\dfrac{\ln x}{x^2}$
+  \task $p(x)=\sin^3(2x)$
+\end{tasks}
+\end{exercise}
+
+\begin{exercise}[Tangent line]
+Find the equation of the tangent line to $f(x)=x^3-2x+1$ at $x=2$.
+\end{exercise}
+
+\begin{answerkey}
+  \textbf{1a)} $12x^3-10x$\par
+  \textbf{1b)} $\tfrac{e^x}{2\sqrt{x}}+\sqrt{x}e^x$\par
+  \textbf{1c)} $\tfrac{1-2\ln x}{x^3}$\par
+  \textbf{1d)} $6\sin^2(2x)\cos(2x)$\par
+  \textbf{2)} $y=10x-11$
+\end{answerkey}
+
+%%=============================================================
+%%  CHAPTER 3 — APPLICATIONS OF DERIVATIVES
+%%=============================================================
+\setChapColor{Cap3Green}{LightGreen}
+\chapter{Applications of Derivatives}
+\markboth{Ch.~3\ --\ Appl.\ of Derivatives}{}
+
+\begin{multicols}{2}
+In this chapter we use derivatives to \textbf{analyze} the behavior
+of functions: finding maxima, minima, inflection points and sketching
+graphs with precision.
+
+\begin{itemize}
+  \item \topic{1}{Increasing and decreasing intervals}
+  \item \topic{2}{Local extrema — Derivative tests}
+  \item \topic{3}{Concavity and inflection}
+  \item \topic{4}{Optimization}
+  \item \topic{5}{L'H\^opital's Rule}
+\end{itemize}
+
+\columnbreak
+\begin{caution}
+The maximum and minimum tests require care!
+A critical point $f'(c)=0$ can be a
+\textbf{maximum}, \textbf{minimum}, or
+\textbf{saddle point}. Use the second derivative to confirm.
+\end{caution}
+\end{multicols}
+
+\secbar
+
+\section{Local Extrema}
+
+\begin{theorem}{First Derivative Test}
+Let $c$ be a critical point of $f$ ($f'(c)=0$):
+\begin{itemize}
+  \item If $f'$ changes from $+$ to $-$ at $c$ $\Rightarrow$ \textbf{local maximum}.
+  \item If $f'$ changes from $-$ to $+$ at $c$ $\Rightarrow$ \textbf{local minimum}.
+  \item If $f'$ does not change sign $\Rightarrow$ \textbf{saddle point}.
+\end{itemize}
+\end{theorem}
+
+\begin{theorem}{Second Derivative Test}
+\[
+  f''(c)>0 \implies \text{local minimum};\qquad
+  f''(c)<0 \implies \text{local maximum}.
+\]
+\end{theorem}
+
+\begin{example}{3.1 — Optimization}
+An open-top box with a square base of side $x$ and height $h$
+must have volume $V=500\,\text{cm}^3$. Minimize the surface area.
+
+\smallskip
+\textbf{Solution:}\ \ $A = x^2 + 4xh$,\ $h=500/x^2$
+\[
+  A(x) = x^2 + \frac{2000}{x},\qquad
+  A'(x) = 2x - \frac{2000}{x^2} = 0 \implies x = \sqrt[3]{1000}=10
+\]
+
+\result{$x=10\,\text{cm}$, $h=5\,\text{cm}$, $A_{\min}=300\,\text{cm}^2$}
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.65\linewidth, height=5cm,
+  axis lines=center,
+  xmin=0, xmax=18, ymin=0, ymax=700,
+  samples=100,
+  xlabel={$x$ (cm)}, ylabel={$A(x)$},
+  xlabel style={font=\small},
+  ylabel style={font=\small},
+  tick label style={font=\small},
+  grid=both,
+  grid style={RuleGray,line width=0.3pt},
+  legend style={font=\small,fill=white,draw=RuleGray}]
+  \addplot[Cap3Green,line width=2pt,domain=1:17] {x^2+2000/x};
+  \addplot[AccentRed,dashed,line width=1.2pt,domain=0:18] {300};
+  \addplot[Cap3Green,only marks,mark=*,mark size=3pt]
+    coordinates {(10,300)};
+  \legend{$A(x)=x^2+\frac{2000}{x}$, $A_{\min}=300$}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{L'H\^opital's Rule}
+
+\begin{theorem}{L'H\^opital's Rule}
+If $\lim_{x\to a}f(x)=\lim_{x\to a}g(x)=0$ (or $\pm\infty$) and
+$g'(x)\neq 0$ on a neighborhood of $a$, then
+\[
+  \lim_{x\to a}\frac{f(x)}{g(x)} = \lim_{x\to a}\frac{f'(x)}{g'(x)}.
+\]
+\end{theorem}
+
+\begin{example}{3.2}
+$\displaystyle\lim_{x\to 0}\dfrac{e^x-1-x}{x^2}$
+is of the form $0/0$. Applying L'H\^opital twice:
+\[
+  \lim_{x\to 0}\frac{e^x-1}{2x} = \lim_{x\to 0}\frac{e^x}{2} = \frac{1}{2}.
+\]
+\result{$1/2$}
+\end{example}
+
+\section*{Chapter 3 Exercises}
+\addcontentsline{toc}{section}{Exercises}
+
+\begin{exercise}[Extrema]
+Find all local and global extrema of
+$f(x)=2x^3-9x^2+12x-4$ on $[0,3]$.
+\end{exercise}
+
+\begin{exercise}[Optimization]
+A farmer wants to enclose a rectangular area of $3600\,\text{m}^2$
+using the minimum length of fencing.
+What should the dimensions be?
+\end{exercise}
+
+\begin{exercise}[L'H\^opital]
+Evaluate: (a) $\lim_{x\to 0}\dfrac{\sin 3x}{x}$;\quad
+           (b) $\lim_{x\to\infty} x e^{-x}$.
+\end{exercise}
+
+\begin{answerkey}
+  \textbf{1)} local min.\ $x=2$; local max.\ $x=1$;\par
+  \quad global min.\ $f(0)=-4$; global max.\ $f(1)=1$\par
+  \textbf{2)} $60\,\text{m}\times 60\,\text{m}$ (square)\par
+  \textbf{3a)} $3$\quad\textbf{3b)} $0$
+\end{answerkey}
+
+%%=============================================================
+%%  CHAPTER 4 — INDEFINITE INTEGRALS
+%%=============================================================
+\setChapColor{Cap4Purple}{LightPurple}
+\chapter{Indefinite Integrals}
+\markboth{Ch.~4\ --\ Indefinite Integrals}{}
+
+\begin{multicols}{2}
+The \textbf{indefinite integral} (or antiderivative) answers the question:
+``which function, when differentiated, gives $f(x)$?''
+
+\begin{itemize}
+  \item \topic{1}{Antiderivatives and $\int$ notation}
+  \item \topic{2}{Basic integrals}
+  \item \topic{3}{Substitution ($u$-substitution)}
+  \item \topic{4}{Integration by parts}
+  \item \topic{5}{Partial fractions}
+\end{itemize}
+
+\columnbreak
+\begin{didyouknow}
+The \textbf{Fundamental Theorem of Calculus} links the integral to the derivative:
+\[
+  \frac{d}{dx}\!\int_a^x f(t)\,dt = f(x).
+\]
+This result is considered one of the deepest in Mathematics!
+\end{didyouknow}
+\end{multicols}
+
+\secbar
+
+\begin{lesson}{Basic Integrals}
+\begin{center}
+\renewcommand{\arraystretch}{1.8}
+\begin{tabular}{|>{\bfseries\color{Cap4Purple}}c|c|c|}
+\hline
+\rowcolor{Cap4Purple}
+\color{white}\textbf{Function $f(x)$} &
+\color{white}\textbf{$\int f(x)\,dx$} &
+\color{white}\textbf{Condition}\\
+\hline
+$x^n$                    & $\dfrac{x^{n+1}}{n+1}+C$ & $n\neq -1$\\
+$\frac{1}{x}$            & $\ln|x|+C$               & $x\neq 0$\\
+$e^x$                    & $e^x+C$                  & \\
+$\sin x$                 & $-\cos x+C$              & \\
+$\cos x$                 & $\sin x+C$               & \\
+$\sec^2 x$               & $\tan x+C$               & \\
+$\frac{1}{\sqrt{1-x^2}}$ & $\arcsin x+C$            & $|x|<1$\\
+$\frac{1}{1+x^2}$        & $\arctan x+C$            & \\
+\hline
+\end{tabular}
+\end{center}
+\end{lesson}
+
+\section{Substitution ($u$-substitution)}
+
+\begin{theorem}{Substitution Technique}
+If $u=g(x)$, then $du=g'(x)\,dx$ and
+\[
+  \int f(g(x))\,g'(x)\,dx = \int f(u)\,du.
+\]
+\end{theorem}
+
+\begin{multicols}{2}
+\begin{example}{4.1}
+Evaluate $\displaystyle\int 2x\cos(x^2)\,dx$.
+
+\textbf{Solution:}\ $u=x^2$, $du=2x\,dx$
+\[
+  \int\cos u\,du = \sin u + C = \sin(x^2)+C.
+\]
+\end{example}
+
+\columnbreak
+\begin{example}{4.2}
+Evaluate $\displaystyle\int\frac{x}{x^2+1}\,dx$.
+
+\textbf{Solution:}\ $u=x^2+1$, $du=2x\,dx$
+\[
+  \frac{1}{2}\int\frac{du}{u} = \frac{1}{2}\ln|u|+C
+    = \frac{\ln(x^2+1)}{2}+C.
+\]
+\end{example}
+\end{multicols}
+
+\section{Integration by Parts}
+
+\begin{theorem}{Integration by Parts}
+\formula[Formula (product rule for integration)]{%
+  \int u\,dv = uv - \int v\,du}
+\textbf{LIATE Rule} for choosing $u$:
+\textbf{L}ogarithmic · \textbf{I}nverse trig. · \textbf{A}lgebraic ·
+\textbf{T}rigonometric · \textbf{E}xponential.
+\end{theorem}
+
+\begin{example}{4.3}
+Evaluate $\displaystyle\int x e^x\,dx$.
+
+$u=x$, $dv=e^x dx$ $\Rightarrow$ $du=dx$, $v=e^x$
+\[
+  \int x e^x\,dx = xe^x - \int e^x\,dx = xe^x - e^x + C = e^x(x-1)+C.
+\]
+\result{$e^x(x-1)+C$}
+\end{example}
+
+\section*{Chapter 4 Exercises}
+\addcontentsline{toc}{section}{Exercises}
+
+\begin{exercise}[Basic integrals]
+Evaluate:
+\begin{tasks}(2)
+  \task $\displaystyle\int(3x^2-2x+5)\,dx$
+  \task $\displaystyle\int\frac{dx}{\sqrt{4-x^2}}$
+  \task $\displaystyle\int e^{3x}\,dx$
+  \task $\displaystyle\int\sec^2(5x)\,dx$
+\end{tasks}
+\end{exercise}
+
+\begin{exercise}[Substitution]
+Evaluate $\displaystyle\int\frac{\ln x}{x}\,dx$.
+\end{exercise}
+
+\begin{exercise}[By parts]
+Evaluate $\displaystyle\int x^2\ln x\,dx$.
+\end{exercise}
+
+\begin{answerkey}
+  \textbf{1a)} $x^3-x^2+5x+C$\par
+  \textbf{1b)} $\arcsin(x/2)+C$\par
+  \textbf{1c)} $\tfrac{1}{3}e^{3x}+C$\par
+  \textbf{1d)} $\tfrac{1}{5}\tan(5x)+C$\par
+  \textbf{2)} $\tfrac{(\ln x)^2}{2}+C$\par
+  \textbf{3)} $\tfrac{x^3}{3}\ln x - \tfrac{x^3}{9}+C$
+\end{answerkey}
+
+%%=============================================================
+%%  BACK MATTER / REFERENCES
+%%=============================================================
+\backmatter
+\setChapColor{Cap1Blue}{LightBlue}
+
+\chapter*{References}
+\addcontentsline{toc}{chapter}{References}
+
+\begin{tcolorbox}[enhanced,colback=BoxGray,colframe=RuleGray,arc=6pt]
+\begin{enumerate}[leftmargin=1.5em]
+  \item STEWART, J. \textit{Calculus}. 8th ed. Cengage, 2016.
+  \item ANTON, H.; BIVENS, I.; DAVIS, S. \textit{Calculus}. 10th ed.
+        Wiley, 2012.
+  \item APOSTOL, T. \textit{Calculus}. 2nd ed. Wiley, 1967. 2 vols.
+  \item SPIVAK, M. \textit{Calculus}. 4th ed. Publish or Perish, 2008.
+  \item THOMAS, G. \textit{Thomas' Calculus}. 14th ed. Pearson, 2018.
+\end{enumerate}
+\end{tcolorbox}
+
+\vspace{1cm}
+\begin{center}
+\begin{tcolorbox}[enhanced,width=0.6\linewidth,
+  colback=Cap1Blue,colframe=Cap1Blue,
+  arc=12pt,halign=center,
+  left=12pt,right=12pt,top=10pt,bottom=10pt]
+  \color{white}\large\bfseries
+  ``Calculus is the language in which\\
+  God wrote the Universe.''\\[6pt]
+  \small\normalfont\color{white!80!Cap1Blue}--- Galileo Galilei (attributed)
+\end{tcolorbox}
+\end{center}
+
+\vspace{1cm}
+\begin{center}
+\qrbox{https://www.wolframalpha.com}{Wolfram Alpha ---\\
+  explore functions online}
+\hspace{1cm}
+\qrbox{https://www.geogebra.org}{GeoGebra ---\\
+  interactive visualizations}
+\end{center}
+
+\end{document}}
+}
